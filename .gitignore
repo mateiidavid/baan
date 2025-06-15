@@ -1,0 +1,10 @@
+.direnv/**
+compile_commands.json
+.cache/**
+target/**
+**.txt
+
+
+# Added by cargo
+
+/target
