@@ -1,14 +1,15 @@
 { pkgs, config, lib, ... }:
 let
   cfg = config.programs.baan;
-  baanPkg = pkgs.callPackage ./package.nix;
+  baanPackages = pkgs.callPackage ./package.nix { };
+  baan = baanPackages.baan;
 in {
   options.programs.baan = {
     enable = lib.mkEnableOption "baan CLI program";
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = baanPkg.baan;
+      default = baan;
       description = "The baan pkg to use";
     };
 
