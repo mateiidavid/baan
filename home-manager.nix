@@ -14,16 +14,14 @@ in {
     };
 
     notesHomePath = lib.mkOption {
-      type = lib.types.str;
+      type = lib.types.path;
       description = "Directory to store notes";
     };
   };
   config = lib.mkIf cfg.enable {
-    home.sessionVariables = {
 
-      BAAN_HOME_DIR = cfg.notesHomePath;
-
-    };
+    home.sessionVariables = { };
+    home.sessionVariables = { BAAN_HOME_DIR = "${cfg.notesHomePath}"; };
     home.packages = [ cfg.package ];
   };
 }
