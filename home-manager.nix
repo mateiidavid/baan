@@ -14,7 +14,7 @@ in {
     };
 
     notesHomePath = lib.mkOption {
-      type = lib.types.path;
+      type = lib.types.str;
       description = "Directory to store notes";
     };
   };
