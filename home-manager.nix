@@ -10,7 +10,7 @@ let
 
 in
 {
-  options = {
+  options.programs.baan = {
     enable = lib.mkEnableOption "baan CLI program";
 
     package = lib.mkOption {
