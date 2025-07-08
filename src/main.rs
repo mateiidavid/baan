@@ -19,7 +19,7 @@ struct Args {
     #[arg(short = 'p', long = "home-path", env = "BAAN_HOME_DIR")]
     home_dir: PathBuf,
     #[command(subcommand)]
-    command: Cmd,
+    command: Option<Cmd>,
 }
 
 // Note: static items do not call [`Drop`] on program termination, so this won't be deallocated.
@@ -58,6 +58,14 @@ enum Cmd {
     Today,
 }
 
+impl Default for Cmd {
+    fn default() -> Self {
+        Self::Init {
+            project_path: PathBuf::from("."),
+        }
+    }
+}
+
 fn main() -> eyre::Result<()> {
     color_eyre::install()?;
     let filter = tracing_subscriber::EnvFilter::try_from_default_env()
@@ -65,6 +73,7 @@ fn main() -> eyre::Result<()> {
         .unwrap();
     tracing_subscriber::fmt().with_env_filter(filter).init();
     let Args { home_dir, command } = Args::parse();
+    let command = command.unwrap_or_default();
     let result = match &command {
         Cmd::Init { project_path } => handle_init(home_dir, project_path.to_path_buf()),
         Cmd::Today => handle_today(home_dir),
@@ -104,6 +113,7 @@ fn open_init(home_path: &PathBuf, mut init_path: PathBuf) -> eyre::Result<PathBu
     if file_path.exists() {
         return Ok(file_path);
     }
+
     // open today's file.
     let mut file = fs::File::create_new(&file_path)?;
     // TODO: if you feel like it, handle interrupted
@@ -197,16 +207,20 @@ impl ProjectRoot {
         let mut head_content = String::new();
         let n = head_file.read_to_string(&mut head_content)?;
         tracing::info!(project = %self, bytes_read = %n, "read HEAD from git directory");
-        let feat_name = head_content
-            .strip_prefix("ref: refs/heads/")
-            .map(|s| s.trim().to_string())
-            .or_else(|| {
-                // Detached HEAD
-                let hash = head_content.trim();
-                Some(format!("HEAD:{}", &hash[..8.min(hash.len())]))
-            })
-            .map(PathBuf::from)
-            .ok_or_eyre("failed to read branch name from HEAD")?;
+        let feat_name = {
+            let branch = head_content
+                .strip_prefix("ref: refs/heads/")
+                .map(|s| s.trim().to_string())
+                .or_else(|| {
+                    // Detached HEAD
+                    let hash = head_content.trim();
+                    Some(format!("HEAD:{}", &hash[..8.min(hash.len())]))
+                })
+                .map(PathBuf::from)
+                .ok_or_eyre("failed to read branch name from HEAD")?;
+            // In case we have something like foo/bar as a branch name
+            branch.file_name().map(PathBuf::from).unwrap_or(branch)
+        };
 
         let project_root = self.resolve_project_root(home_dir)?;
         Ok(project_root.join(feat_name).with_extension("md"))
