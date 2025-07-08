@@ -19,8 +19,6 @@ in {
     };
   };
   config = lib.mkIf cfg.enable {
-
-    home.sessionVariables = { };
     home.sessionVariables = { BAAN_HOME_DIR = "${cfg.notesHomePath}"; };
     home.packages = [ cfg.package ];
   };
