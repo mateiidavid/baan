@@ -7,7 +7,7 @@
 
     # Computed from the crate sources; i.e. all deps are hashed and
     # that gives a checksum. obtained w/ a fake checksum
-    cargoHash = "sha256-d1beS0rUpRxE+TQZp5U6LEbuv+8WMvhDg5nPP+w05J0=";
+    cargoHash = "sha256-+P/yYRLBCv4UE7vw1Wp7kLcy0bKyTFUFa42nogvt10g=";
 
     meta = with pkgs.lib; {
       description = "A CLI to help me takes notes using Helix";
