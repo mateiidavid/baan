@@ -1,8 +1,7 @@
 { pkgs, ... }:
-let
-  baanBase = pkgs.rustPlatform.buildRustPackage {
+  pkgs.rustPlatform.buildRustPackage {
     pname = "baan";
-    version = "0.1.0";
+    version = "0.1.1";
 
     src = ./.;
 
@@ -17,20 +16,4 @@ let
       maintainers = [ maintainers.mateiidavid ];
       platforms = platforms.all;
     };
-  };
-in
-{
-
-  # Base baan package
-  baan = baanBase;
-
-  # Create a configured wrapper for simple uses cases (i.e. outside of home-manager)
-  makeBaanWrapper =
-    {
-      homeDirPath ? "${builtins.getEnv "HOME"}/notes",
-    }:
-    pkgs.writeShellScriptBin "baan" ''
-      export BAAN_HOME_DIR="${homeDirPath}"
-      exec ${baanBase}/bin/baan "$@"
-    '';
 }

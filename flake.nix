@@ -31,7 +31,7 @@
             programs.nixfmt.enable = true;
           };
         treefmtEval = treefmt-nix.lib.evalModule pkgs treeConfig;
-        baanPkgs = pkgs.callPackage ./package.nix { };
+        baanPkg = pkgs.callPackage ./package.nix {};
       in
       {
 
@@ -50,13 +50,8 @@
             ;
         };
         formatter = treefmtEval.config.build.wrapper;
-        packages.default = baanPkgs.baan;
-        packages.baan = baanPkgs.baan;
+        packages.default = baanPkg;
+        overlays.default = baanPkg;
       }
-    )
-    // {
-      overlays.default = final: prev: {
-        baan = (prev.callPackage ./package.nix { }).baan;
-      };
-    };
+    );
 }
