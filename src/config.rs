@@ -42,11 +42,14 @@ pub fn mk_runtime_config() -> eyre::Result<Config> {
 
 // TODO: buggy since we need to do a fs::create_all
 fn read_from_file_or_default(file_path: PathBuf) -> eyre::Result<Config> {
+    tracing::debug!(?file_path, "reading configuration from file");
     if file_path.is_file() {
+        tracing::debug!(?file_path, "found existing config");
         let buf = fs::read_to_string(file_path)?;
         return toml::from_str::<Config>(&buf).wrap_err("failed to deserialize config");
     }
 
+    tracing::debug!(?file_path, "using defaults");
     let config = Config::default();
     let ser = toml::to_string(&config).wrap_err("failed to serialize config")?;
     let mut out = File::create(&file_path)?;
