@@ -36,7 +36,7 @@ pub fn mk_runtime_config() -> eyre::Result<Config> {
     };
 
     fs::create_dir_all(&config_dir)?;
-    config = read_from_file_or_default(config_dir.join("config.toml"))?;
+    let config = read_from_file_or_default(config_dir.join("config.toml"))?;
     Ok(config)
 }
 
