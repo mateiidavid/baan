@@ -51,9 +51,10 @@
         };
         formatter = treefmtEval.config.build.wrapper;
         packages.default = baanPkg;
-        overlays.default = [
-        (prev: final: { baan = prev.pkgs.callPackage ./package.nix {}; } )
-      ];
+      } // {
+        overlays = {
+            default = prev: final: { baan = self.packages.${prev.system}.baan; };
+        };
       } 
     );
 }
