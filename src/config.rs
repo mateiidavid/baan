@@ -36,8 +36,8 @@ pub fn mk_runtime_config() -> eyre::Result<Config> {
     };
 
     fs::create_dir_all(&config_dir)?;
-    read_from_file_or_default(config_dir.join("config.toml"))?;
-    Ok(Config::default())
+    config = read_from_file_or_default(config_dir.join("config.toml"))?;
+    Ok(config)
 }
 
 // TODO: buggy since we need to do a fs::create_all
