@@ -53,7 +53,7 @@
         packages.default = baanPkg;
       } // {
         overlays = {
-            default = prev: final: { baan = self.packages.${prev.system}.baan; };
+            default = final: prev: { baan = self.packages.${prev.system}.default; };
         };
       } 
     );
