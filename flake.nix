@@ -23,8 +23,6 @@
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        # not legacy at all just makes nix flake check go brrr
-        # https://github.com/NixOS/nixpkgs/blob/e456032addae76701eb17e6c03fc515fd78ad74f/flake.nix#L76
         overlays = [ (import rust-overlay) ];
         pkgs = import nixpkgs { inherit system overlays; };
         treeConfig =

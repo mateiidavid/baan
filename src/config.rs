@@ -35,9 +35,8 @@ pub fn mk_runtime_config() -> eyre::Result<Config> {
         }
     };
 
-    // fs::create_dir_all(&config_dir)?;
-    // read_from_file_or_default(config_dir.join("config.toml"))
-    tracing::info!("current dir is: {config_dir:?}");
+    fs::create_dir_all(&config_dir)?;
+    read_from_file_or_default(config_dir.join("config.toml"))?;
     Ok(Config::default())
 }
 
@@ -58,23 +57,23 @@ fn read_from_file_or_default(file_path: PathBuf) -> eyre::Result<Config> {
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Config {
     #[serde(default)]
-    user: UserConfig,
+    pub(crate) user: UserConfig,
     #[serde(default)]
-    template: Template,
+    pub(crate) template: Template,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct UserConfig {
+pub(crate) struct UserConfig {
     #[serde(default)]
-    editor: Option<String>,
+    pub(crate) editor: Option<String>,
     #[serde(default = "default_home_dir")]
-    home_dir: PathBuf,
+    pub(crate) home_dir: PathBuf,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Template {
+pub(crate) struct Template {
     #[serde(rename = "headers")]
-    root_headers: Vec<String>,
+    pub(crate) root_headers: Vec<String>,
 }
 
 fn default_home_dir() -> PathBuf {

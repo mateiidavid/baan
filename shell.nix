@@ -29,7 +29,7 @@ mkShell {
     # Set environment variables to help tools find rust-src
     RUST_SRC_PATH = "${rustToolChain}/lib/rustlib/src/library";
     # Development
-    BAAN_LOG_LEVEL="baan=info";
+    BAAN_LOG_LEVEL="baan=debug,info";
     BAAN_LOCAL_DEV=1;
   };
 }
