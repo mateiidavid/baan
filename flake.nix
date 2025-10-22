@@ -51,10 +51,9 @@
         };
         formatter = treefmtEval.config.build.wrapper;
         packages.default = baanPkg;
-      } // {
+      }) // {
         overlays = {
             default = final: prev: { baan = self.packages.${prev.system}.default; };
         };
-      } 
-    );
+      }; 
 }
